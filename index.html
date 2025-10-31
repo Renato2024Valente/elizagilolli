@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Evidências - Prof. Eliza Giliolli</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+      height: 100vh;
+      background: url('estrelas.gif') center center / cover no-repeat fixed;
+      cursor: none;
+    }
+
+    header {
+      background: rgba(10, 10, 40, 0.7);
+      backdrop-filter: blur(6px);
+      padding: 16px 0;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      z-index: 5;
+      position: relative;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background: rgba(30, 30, 60, 0.7);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      backdrop-filter: blur(6px);
+      position: relative;
+      z-index: 5;
+    }
+
+    nav a {
+      color: #e0e0ff;
+      text-decoration: none;
+      padding: 14px 22px;
+      display: block;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,0.2);
+      color: #ffd700;
+      cursor: pointer;
+    }
+
+    .submenu {
+      display: none;
+      flex-direction: column;
+      background: rgba(10, 10, 40, 0.9);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .submenu a {
+      padding: 10px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .menu-item {
+      position: relative;
+    }
+
+    .menu-item:hover .submenu {
+      display: flex;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 220px;
+      z-index: 99;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 70px auto;
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.15);
+      text-align: center;
+      position: relative;
+      z-index: 3;
+      backdrop-filter: blur(6px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(10, 10, 40, 0.8);
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-top: 50px;
+      z-index: 3;
+      position: relative;
+    }
+
+    /* ======== ESTRELAS CURSOR ======== */
+    .estrela {
+      position: fixed;
+      width: 22px;
+      height: 22px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 25px currentColor);
+      animation: brilho 1.2s infinite alternate ease-in-out;
+    }
+
+    @keyframes brilho {
+      from { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+      to { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    }
+
+    #trail {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      opacity: 0.9;
+      animation: fade 1s linear forwards;
+    }
+
+    @keyframes fade {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.2); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>ELIZA GILIOLLI</header>
+
+  <nav>
+    <a href="#">Início</a>
+    <div class="menu-item">
+      <a href="#">Galerias ▼</a>
+      <div class="submenu">
+        <a href="#">EVIDÊNCIAS PDI-2025</a>
+        <a href="#">EVIDÊNCIAS GERAIS-2025</a>
+        <a href="#">Projetos</a>
+      </div>
+    </div>
+    <a href="#">Sobre</a>
+    <a href="#">Contato</a>
+  </nav>
+
+  <main>
+    <h2>Bem-vindo!</h2>
+    <p><b>Professora Eliza Giliolli</b> — Evidências Digitais 2025</p>
+    <p>Escola Monsenhor Bicudo — Ensino Integral</p>
+  </main>
+
+  <footer>
+    © 2025 Prof. Eliza Giliolli — Todos os direitos reservados
+  </footer>
+
+  <!-- Estrelas principais -->
+  <svg class="estrela" id="estrela-principal" viewBox="0 0 64 64" fill="gold">
+    <polygon points="32,2 39,24 62,24 43,38 50,60 32,47 14,60 21,38 2,24 25,24"/>
+  </svg>
+
+  <svg class="estrela" id="estrela-rosa" viewBox="0 0 64 64" fill="#ff69b4">
+    <polygon points="32,2 39,24 62,24 43,38 50,60 32,47 14,60 21,38 2,24 25,24"/>
+  </svg>
+
+  <svg class="estrela" id="estrela-azul" viewBox="0 0 64 64" fill="#66ccff">
+    <polygon points="32,2 39,24 62,24 43,38 50,60 32,47 14,60 21,38 2,24 25,24"/>
+  </svg>
+
+  <svg class="estrela" id="estrela-verde" viewBox="0 0 64 64" fill="#a6ff9c">
+    <polygon points="32,2 39,24 62,24 43,38 50,60 32,47 14,60 21,38 2,24 25,24"/>
+  </svg>
+
+  <div id="trail"></div>
+
+  <script>
+    const estrelas = [
+      { el: document.getElementById("estrela-principal"), color: "#ffd700", delay: 0 },
+      { el: document.getElementById("estrela-rosa"), color: "#ff69b4", delay: 10 },
+      { el: document.getElementById("estrela-azul"), color: "#66ccff", delay: 20 },
+      { el: document.getElementById("estrela-verde"), color: "#a6ff9c", delay: 30 }
+    ];
+    const trail = document.getElementById("trail");
+
+    let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
+    document.addEventListener("mousemove", e => { tx = e.clientX; ty = e.clientY; });
+
+    estrelas.forEach((estrela, i) => {
+      estrela.x = tx;
+      estrela.y = ty;
+    });
+
+    function animate() {
+      estrelas.forEach((estrela, i) => {
+        estrela.x += (tx - estrela.x) * (0.12 + i * 0.03);
+        estrela.y += (ty - estrela.y) * (0.12 + i * 0.03);
+        estrela.el.style.left = estrela.x + "px";
+        estrela.el.style.top = estrela.y + "px";
+
+        // rastro colorido
+        if (Math.random() < 0.5) {
+          const s = document.createElement("div");
+          s.className = "sparkle";
+          s.style.left = estrela.x + "px";
+          s.style.top = estrela.y + "px";
+          s.style.background = `radial-gradient(circle, ${estrela.color} 0%, transparent 70%)`;
+          trail.appendChild(s);
+          setTimeout(() => s.remove(), 1000);
+        }
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Interação ao passar sobre links
+    document.querySelectorAll("a").forEach(link => {
+      link.addEventListener("mouseenter", () => {
+        estrelas.forEach(e => e.el.style.transform = "translate(-50%, -50%) scale(1.5) rotate(20deg)");
+      });
+      link.addEventListener("mouseleave", () => {
+        estrelas.forEach(e => e.el.style.transform = "translate(-50%, -50%) scale(1) rotate(0deg)");
+      });
+    });
+  </script>
+
+</body>
+</html>
