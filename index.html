@@ -9,10 +9,11 @@
       margin: 0;
       font-family: "Inter", sans-serif;
       color: #fff;
-      overflow-x: hidden;
+      overflow: hidden;
       height: 100vh;
       background: url('estrelas.gif') center center / cover no-repeat fixed;
       cursor: none;
+      touch-action: none; /* evita scroll acidental no toque */
     }
 
     header {
@@ -35,6 +36,7 @@
       backdrop-filter: blur(6px);
       position: relative;
       z-index: 5;
+      flex-wrap: wrap;
     }
 
     nav a {
@@ -102,30 +104,28 @@
       position: relative;
     }
 
-    /* ======== ESTRELAS CURSOR ======== */
+    /* ======== ESTRELAS ======== */
     .estrela {
       position: fixed;
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       pointer-events: none;
       transform: translate(-50%, -50%);
       z-index: 10;
-      filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 25px currentColor);
-      animation: brilho 1.2s infinite alternate ease-in-out;
+      filter: drop-shadow(0 0 10px currentColor)
+              drop-shadow(0 0 20px currentColor)
+              drop-shadow(0 0 30px currentColor);
+      transition: filter 0.3s ease;
     }
 
     @keyframes brilho {
-      from { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
-      to { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
     }
 
-    #trail {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 1;
+    @keyframes fade {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.2); }
     }
 
     .sparkle {
@@ -135,11 +135,6 @@
       border-radius: 50%;
       opacity: 0.9;
       animation: fade 1s linear forwards;
-    }
-
-    @keyframes fade {
-      from { opacity: 1; transform: scale(1); }
-      to { opacity: 0; transform: scale(0.2); }
     }
   </style>
 </head>
@@ -171,71 +166,88 @@
     © 2025 Prof. Eliza Giliolli — Todos os direitos reservados
   </footer>
 
-  <!-- Estrelas principais -->
-  <svg class="estrela" id="estrela-principal" viewBox="0 0 64 64" fill="gold">
+  <!-- 4 Estrelas -->
+  <svg class="estrela" id="estrela1" viewBox="0 0 64 64" fill="gold">
     <polygon points="32,2 39,24 62,24 43,38 50,60 32,47 14,60 21,38 2,24 25,24"/>
   </svg>
-
-  <svg class="estrela" id="estrela-rosa" viewBox="0 0 64 64" fill="#ff69b4">
+  <svg class="estrela" id="estrela2" viewBox="0 0 64 64" fill="#ff69b4">
     <polygon points="32,2 39,24 62,24 43,38 50,60 32,47 14,60 21,38 2,24 25,24"/>
   </svg>
-
-  <svg class="estrela" id="estrela-azul" viewBox="0 0 64 64" fill="#66ccff">
+  <svg class="estrela" id="estrela3" viewBox="0 0 64 64" fill="#66ccff">
     <polygon points="32,2 39,24 62,24 43,38 50,60 32,47 14,60 21,38 2,24 25,24"/>
   </svg>
-
-  <svg class="estrela" id="estrela-verde" viewBox="0 0 64 64" fill="#a6ff9c">
+  <svg class="estrela" id="estrela4" viewBox="0 0 64 64" fill="#a6ff9c">
     <polygon points="32,2 39,24 62,24 43,38 50,60 32,47 14,60 21,38 2,24 25,24"/>
   </svg>
 
   <div id="trail"></div>
 
   <script>
-    const estrelas = [
-      { el: document.getElementById("estrela-principal"), color: "#ffd700", delay: 0 },
-      { el: document.getElementById("estrela-rosa"), color: "#ff69b4", delay: 10 },
-      { el: document.getElementById("estrela-azul"), color: "#66ccff", delay: 20 },
-      { el: document.getElementById("estrela-verde"), color: "#a6ff9c", delay: 30 }
-    ];
+    const cores = ["#ffd700", "#ff69b4", "#66ccff", "#a6ff9c"];
+    const estrelas = cores.map((cor, i) => ({
+      el: document.getElementById(`estrela${i+1}`),
+      color: cor,
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2
+    }));
+
     const trail = document.getElementById("trail");
-
     let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
-    document.addEventListener("mousemove", e => { tx = e.clientX; ty = e.clientY; });
+    let ultimaMov = Date.now();
 
-    estrelas.forEach((estrela, i) => {
-      estrela.x = tx;
-      estrela.y = ty;
-    });
+    function atualizarPos(e) {
+      const toque = e.touches ? e.touches[0] : e;
+      tx = toque.clientX;
+      ty = toque.clientY;
+      ultimaMov = Date.now();
+    }
+
+    document.addEventListener("mousemove", atualizarPos);
+    document.addEventListener("touchmove", atualizarPos, { passive: true });
 
     function animate() {
+      const agora = Date.now();
+      const parado = agora - ultimaMov > 1000;
+
       estrelas.forEach((estrela, i) => {
-        estrela.x += (tx - estrela.x) * (0.12 + i * 0.03);
-        estrela.y += (ty - estrela.y) * (0.12 + i * 0.03);
+        estrela.x += (tx - estrela.x) * (0.1 + i * 0.03);
+        estrela.y += (ty - estrela.y) * (0.1 + i * 0.03);
         estrela.el.style.left = estrela.x + "px";
         estrela.el.style.top = estrela.y + "px";
 
-        // rastro colorido
-        if (Math.random() < 0.5) {
+        // muda cor se parado
+        if (parado) {
+          const hue = (agora / 20 + i * 90) % 360;
+          estrela.el.style.fill = `hsl(${hue}, 100%, 65%)`;
+          estrela.el.style.filter = `drop-shadow(0 0 10px hsl(${hue},100%,65%))
+                                     drop-shadow(0 0 20px hsl(${hue},100%,70%))`;
+        } else {
+          estrela.el.style.fill = estrela.color;
+        }
+
+        // rastro tipo cometa
+        if (Math.random() < 0.4) {
           const s = document.createElement("div");
           s.className = "sparkle";
           s.style.left = estrela.x + "px";
           s.style.top = estrela.y + "px";
           s.style.background = `radial-gradient(circle, ${estrela.color} 0%, transparent 70%)`;
           trail.appendChild(s);
-          setTimeout(() => s.remove(), 1000);
+          setTimeout(() => s.remove(), 800);
         }
       });
       requestAnimationFrame(animate);
     }
     animate();
 
-    // Interação ao passar sobre links
+    // interação nos links (brilho mais forte)
     document.querySelectorAll("a").forEach(link => {
       link.addEventListener("mouseenter", () => {
-        estrelas.forEach(e => e.el.style.transform = "translate(-50%, -50%) scale(1.5) rotate(20deg)");
+        estrelas.forEach(e => e.el.style.filter = "drop-shadow(0 0 25px #fff) drop-shadow(0 0 50px #ffea70)");
       });
       link.addEventListener("mouseleave", () => {
-        estrelas.forEach(e => e.el.style.transform = "translate(-50%, -50%) scale(1) rotate(0deg)");
+        estrelas.forEach((e, i) => e.el.style.filter =
+          `drop-shadow(0 0 10px ${e.color}) drop-shadow(0 0 25px ${e.color})`);
       });
     });
   </script>
