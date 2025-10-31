@@ -56,10 +56,15 @@
   .submenu {
     display: none;
     flex-direction: column;
-    background: rgba(10,10,40,0.9);
+    background: rgba(10,10,40,0.95);
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 220px;
+    z-index: 99;
   }
 
   .submenu a {
@@ -71,13 +76,8 @@
     position: relative;
   }
 
-  .menu-item:hover .submenu {
+  .menu-item.active .submenu {
     display: flex;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 220px;
-    z-index: 99;
   }
 
   main {
@@ -104,7 +104,6 @@
     position: relative;
   }
 
-  /* ======== ESTRELAS ======== */
   .estrela {
     position: fixed;
     width: 22px;
@@ -138,10 +137,10 @@
 <nav>
   <a href="#">Início</a>
   <div class="menu-item">
-    <a href="#">Galerias ▼</a>
+    <a href="#" class="menu-toggle">Galerias ▼</a>
     <div class="submenu">
       <a href="#">EVIDÊNCIAS PDI-2025</a>
-      <a href="#">EVIDÊNCIAS GERAIS-2025</a>
+     <a href="#">EVIDÊNCIAS SALA AULA</a>
       <a href="#">Projetos</a>
     </div>
   </div>
@@ -176,6 +175,20 @@
 <div id="trail"></div>
 
 <script>
+  // ======== MENU MOBILE (abre com toque) ========
+  document.querySelectorAll(".menu-toggle").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.preventDefault();
+      const item = btn.parentElement;
+      item.classList.toggle("active");
+      // fecha outros submenus abertos
+      document.querySelectorAll(".menu-item").forEach(other => {
+        if (other !== item) other.classList.remove("active");
+      });
+    });
+  });
+
+  // ======== ESTRELAS INTERATIVAS ========
   const cores = ["#ffd700", "#ff69b4", "#66ccff", "#a6ff9c"];
   const estrelas = cores.map((cor, i) => ({
     el: document.getElementById(`estrela${i + 1}`),
@@ -185,8 +198,7 @@
   }));
 
   const trail = document.getElementById("trail");
-  let tx = window.innerWidth / 2,
-      ty = window.innerHeight / 2;
+  let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
   let ultimaMov = Date.now();
 
   function atualizarPos(e) {
@@ -205,11 +217,9 @@
     const agora = Date.now();
     const parado = agora - ultimaMov > 1000;
 
-    // líder (estrela 0)
-    estrelas[0].x += (tx - estrelas[0].x) * 0.5;
-    estrelas[0].y += (ty - estrelas[0].y) * 0.5;
-
-    // outras seguem a anterior com atraso leve
+    // movimento em cauda
+    estrelas[0].x += (tx - estrelas[0].x) * 0.4;
+    estrelas[0].y += (ty - estrelas[0].y) * 0.4;
     for (let i = 1; i < estrelas.length; i++) {
       estrelas[i].x += (estrelas[i - 1].x - estrelas[i].x) * 0.3;
       estrelas[i].y += (estrelas[i - 1].y - estrelas[i].y) * 0.3;
@@ -219,19 +229,14 @@
       estrela.el.style.left = estrela.x + "px";
       estrela.el.style.top = estrela.y + "px";
 
-      // cor dinâmica quando parada
+      // cor arco-íris quando parada
       if (parado) {
         const hue = (agora / 10 + i * 90) % 360;
         estrela.el.style.fill = `hsl(${hue},100%,65%)`;
-        estrela.el.style.filter = `drop-shadow(0 0 15px hsl(${hue},100%,70%))
-                                   drop-shadow(0 0 30px hsl(${hue},100%,75%))`;
       } else {
         estrela.el.style.fill = estrela.color;
-        estrela.el.style.filter = `drop-shadow(0 0 10px ${estrela.color})
-                                   drop-shadow(0 0 25px ${estrela.color})`;
       }
 
-      // rastro
       if (Math.random() < 0.6) {
         const s = document.createElement("div");
         s.className = "sparkle";
@@ -245,20 +250,7 @@
 
     requestAnimationFrame(animate);
   }
-
   animate();
-
-  // brilho nos links
-  document.querySelectorAll("a").forEach(link => {
-    link.addEventListener("mouseenter", () => {
-      estrelas.forEach(e => e.el.style.filter =
-        "drop-shadow(0 0 25px #fff) drop-shadow(0 0 50px #ffea70)");
-    });
-    link.addEventListener("mouseleave", () => {
-      estrelas.forEach((e, i) =>
-        e.el.style.filter = `drop-shadow(0 0 10px ${e.color}) drop-shadow(0 0 25px ${e.color})`);
-    });
-  });
 </script>
 
 </body>
