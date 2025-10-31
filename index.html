@@ -104,15 +104,23 @@
     position: relative;
   }
 
+  /* ======== ESTRELAS ======== */
   .estrela {
     position: fixed;
     width: 22px;
     height: 22px;
-    pointer-events: none;
     transform: translate(-50%, -50%);
-    z-index: 10;
+    z-index: 9999; /* por cima de tudo */
     filter: drop-shadow(0 0 10px currentColor)
             drop-shadow(0 0 25px currentColor);
+    pointer-events: none; /* não bloqueia toque nem clique */
+  }
+
+  #trail {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9998; /* logo abaixo das estrelas */
   }
 
   @keyframes fade {
@@ -140,7 +148,7 @@
     <a href="#" class="menu-toggle">Galerias ▼</a>
     <div class="submenu">
       <a href="#">EVIDÊNCIAS PDI-2025</a>
-     <a href="#">EVIDÊNCIAS SALA AULA</a>
+      <a href="#">EVIDÊNCIAS SALA AULA</a>
       <a href="#">Projetos</a>
     </div>
   </div>
@@ -202,7 +210,6 @@
   let ultimaMov = Date.now();
 
   function atualizarPos(e) {
-    e.preventDefault();
     const toque = e.touches ? e.touches[0] : e;
     tx = toque.clientX;
     ty = toque.clientY;
@@ -210,8 +217,8 @@
   }
 
   document.addEventListener("mousemove", atualizarPos);
-  document.addEventListener("touchstart", atualizarPos, { passive: false });
-  document.addEventListener("touchmove", atualizarPos, { passive: false });
+  document.addEventListener("touchstart", atualizarPos, { passive: true });
+  document.addEventListener("touchmove", atualizarPos, { passive: true });
 
   function animate() {
     const agora = Date.now();
@@ -237,6 +244,7 @@
         estrela.el.style.fill = estrela.color;
       }
 
+      // rastro
       if (Math.random() < 0.6) {
         const s = document.createElement("div");
         s.className = "sparkle";
@@ -247,7 +255,6 @@
         setTimeout(() => s.remove(), 700);
       }
     });
-
     requestAnimationFrame(animate);
   }
   animate();
